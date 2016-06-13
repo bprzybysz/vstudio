@@ -5,7 +5,7 @@
 #include <limits>
 
 template<class K, class V>
-class interval_map
+class IntervalMap
 {
 	friend void IntervalMapTest()
 	{
@@ -18,7 +18,7 @@ private:
 public:
 	// constructor associates whole range of K with val by inserting (K_min, val)
 	// into the map
-	interval_map(V const& val) {
+	explicit IntervalMap(V const& val) {
 		m_map.insert(m_map.begin(), std::make_pair(std::numeric_limits<K>::lowest(), val));
 	};
 
@@ -81,7 +81,7 @@ public:
 // Many solutions we receive are incorrect. Consider using a randomized test
 // to discover the cases that your implementation does not handle correctly.
 // We recommend to implement a function IntervalMapTest() here that tests the
-// functionality of the interval_map, for example using a map of unsigned int
+// functionality of the IntervalMap, for example using a map of unsigned int
 // intervals to char.
 
 

@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "gtest/gtest.h"
 #include <memory>
-#include "../omega/interval_map.h"
+#include "../omega/IntervalMap.h"
 
 TEST(omega_tests, interval_test)
 {
-	using int_interval_map = interval_map<unsigned int, std::string>;
+	using int_interval_map = IntervalMap<unsigned int, std::string>;
 
 	int_interval_map a("init");
 
