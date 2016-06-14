@@ -35,7 +35,7 @@
     <ClCompile Include="test_omega.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_quick_sort.cpp">
+    <ClCompile Include="test_quicksort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

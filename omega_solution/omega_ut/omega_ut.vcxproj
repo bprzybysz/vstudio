@@ -166,7 +166,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="test_omega.cpp" />
-    <ClCompile Include="test_quick_sort.cpp" />
+    <ClCompile Include="test_quicksort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\googletest\msvc\gtest-md.vcxproj">

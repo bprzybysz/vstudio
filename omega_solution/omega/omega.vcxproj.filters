@@ -27,9 +27,6 @@
     <ClInclude Include="omega.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="iomega.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dllexport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
