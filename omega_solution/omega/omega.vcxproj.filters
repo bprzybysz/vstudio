@@ -33,13 +33,16 @@
     <ClInclude Include="dllexport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tc_algorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IntervalMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="isort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="quick_sort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -51,9 +54,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tc_algorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="heap.cpp">

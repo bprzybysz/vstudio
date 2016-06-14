@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <boost/functional/hash.hpp>
 
 
 class heap
@@ -12,5 +13,14 @@ class heap
 public:
 	heap(int heap_size);
 	~heap();
+
+
+	friend size_t hash_value(const heap& obj)
+	{
+		size_t seed = 0x309A79FC;
+		boost::hash_combine(seed, obj._heap);
+		boost::hash_combine(seed, obj._current_size);
+		return seed;
+	}
 };
 

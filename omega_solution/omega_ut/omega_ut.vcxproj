@@ -70,20 +70,20 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(PlatformShortName)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath);;$(SolutionDir)\omega</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath);;$(SolutionDir)\omega</IncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(PlatformShortName)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath);;$(SolutionDir)\omega</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)googletest\include;$(IncludePath);;$(SolutionDir)\omega</IncludePath>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -166,6 +166,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="test_omega.cpp" />
+    <ClCompile Include="test_quick_sort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\googletest\msvc\gtest-md.vcxproj">
