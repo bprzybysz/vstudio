@@ -2,23 +2,13 @@
 #include "FFT.h"
 #include "dllexport.h"
 
+const double FFT::PI = std::acos(-1);
 
 FFT::FFT(const ComplexVectorT & input)
 	: _input{ input }, _input_size{ input.size() }, 
 	_fifactors(input.size() / 2)
 {
-}
-
-void FFT::InitFiFactors()
-{
-	const double pi = std::acos(-1);
-
-	ComplexDoubleT f;
-	for (auto k = 0u; k <= _input_size / 2; ++k)
-	{
-		auto fi = -2 * pi* k / _input_size; //TODO: can be optimized
-		_fifactors[k] = std::move(ComplexDoubleT(cos(fi), sin(fi)));
-	}
+	InitFiFactors();
 }
 
 FFT::~FFT()
@@ -27,10 +17,31 @@ FFT::~FFT()
 
 void FFT::Compute()
 {
+	_multi = 0;
 	_output = DitFFT2(_input.data(), _input_size, 1);
-	//DitFFT21(0, _input_size, 1);
 }
 
+
+inline const ComplexDoubleT & FFT::Fi(size_t k) const
+{
+	auto it = _fifactors.find(k);
+
+	if (it == _fifactors.end())
+		throw std::exception("k factor not defined!");
+
+	return it->second;
+}
+
+void FFT::InitFiFactors()
+{
+	double fdelta = -2 * PI / _input_size;
+
+	double fi = 0.0;
+	for (size_t k = 0; k < _input_size; k++, fi+=fdelta)
+	{
+		_fifactors[k] = std::move(ComplexDoubleT(cos(fi), sin(fi)));
+	}
+}
 
 ComplexVectorT FFT::DitFFT2(const ComplexDoubleT * x, size_t N, size_t s)
 {
@@ -42,21 +53,18 @@ ComplexVectorT FFT::DitFFT2(const ComplexDoubleT * x, size_t N, size_t s)
 	{
 		ComplexVectorT output(N);
 		auto halfN = N / 2;
+
 		auto leftX = DitFFT2(x, halfN, 2 * s);
 		auto rightX = DitFFT2(x + s, halfN, 2 * s);
 
-		auto pi = std::acos(-1);
+		auto step = _input_size / N;
 
-		for (auto k = 0; k <= N / 2 - 1; ++k)
+		for (auto k = 0, fiIx = 0; k <= halfN - 1; ++k, fiIx+=step)
 		{
 			auto & t = leftX[k];
 
-			auto fi = -2 * pi*k / N; //TODO: can be optimized
-			auto f = ComplexDoubleT(cos(fi), sin(fi));
-
 			auto & delta = rightX[k];
-			delta*= f;
-
+			delta*= Fi(fiIx);
 
 			auto & outAtK = output[k] = std::move(delta);
 			auto & outAtKNd2 = output[k + halfN] = t;
@@ -114,3 +122,9 @@ ComplexVectorT ToComplexVector(int * pInput, size_t size)
 
 	return std::move(newVector);
 }
+
+
+const ComplexVectorT & FFT::Output() const 
+{
+	return _output;
+};
