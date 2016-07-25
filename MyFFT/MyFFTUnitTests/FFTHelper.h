@@ -37,22 +37,17 @@ private:
 			ComplexDoubleT(-4.0000000000000000, 4.0000000000000000),
 			ComplexDoubleT(-4.0000000000000000, 1.6568542494923797),
 			ComplexDoubleT(-4.0000000000000000, 0),
-			ComplexDoubleT(-3.9999999999999996, -1.6568542494923797),
+			ComplexDoubleT(-3.9999999999999996, -1.6568542494923806),
 			ComplexDoubleT(-3.9999999999999996, -4.0000000000000000),
 			ComplexDoubleT(-3.9999999999999987, -9.6568542494923797),
 		}
 	};
 
-	const ComplexVectorT & GetVec(const Data & data)
-	{
-		return data.output;
-	};
-
 public:
 
-	const ComplexVectorT & GetVec1()
+	const Data & GetVec1()
 	{
-		return GetVec(_data1);
+		return _data1;
 	};
 };
 

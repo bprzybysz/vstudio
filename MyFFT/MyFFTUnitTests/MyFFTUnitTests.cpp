@@ -10,13 +10,14 @@
 
 TEST(MyFFTUts, Create)
 {
-	int testArray[] = { 0,1,2,3,4,5,6,7 };
 	FFTHelper helper;
 
-	auto data = ToComplexVector(testArray, sizeof(testArray)/sizeof(int));
-
-	FFT fft(data);
+	auto data1 = helper.GetVec1();
+	FFT fft(data1.input);
 	fft.Compute();
 
-	ASSERT_EQ(fft.Output(), helper.GetVec1());
+	auto output = fft.Output();
+	auto equals = std::equal(output.begin(), output.end(), data1.output.begin());
+
+	ASSERT_TRUE(equals);
 }

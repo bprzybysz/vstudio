@@ -85,31 +85,6 @@ ComplexVectorT FFT::DitFFT2(const ComplexDoubleT * x, size_t N, size_t s)
 
 }
 
-void FFT::DitFFT21(size_t x0, size_t N, size_t s)
-{
-	if(N > 1)
-	{
-		auto halfN = N / 2;
-		DitFFT21(x0, halfN, 2*s);
-		DitFFT21(x0 + s, halfN, 2*s);
-
-		ComplexDoubleT t;
-		const double pi = std::acos(-1);
-
-		ComplexDoubleT f;
-		for (auto k = x0; k <= x0 + halfN-1; ++k)
-		{
-			t = _output[k];
-
-			auto fi = -2*pi*k/N; //TODO: can be optimized
-			const ComplexDoubleT & f = ComplexDoubleT(cos(fi), sin(fi));
-
-			auto delta = f*_output[k + halfN];
-			_output[k] = t + delta;
-			_output[k+halfN] = t - delta;
-		}
-	}
-}
 
 ComplexVectorT ToComplexVector(int * pInput, size_t size)
 {
@@ -117,7 +92,7 @@ ComplexVectorT ToComplexVector(int * pInput, size_t size)
 
 	for(size_t i = 0; i < size; ++i)
 	{
-		newVector[i] = static_cast<double>(pInput[i]);
+		newVector[i] = std::move(ComplexDoubleT(static_cast<double>(pInput[i]), 0.0));
 	}
 
 	return std::move(newVector);
