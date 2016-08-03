@@ -42,7 +42,7 @@ namespace CeleraOne
 		virtual void Insert(const KeyT& key, const ValueT& value) = 0;
 		virtual void Delete(const KeyT& key) = 0;
 		virtual bool Contains(const KeyT& key) const = 0;
-		virtual const ValueT& Lookup(const KeyT& key) const = 0;
+		virtual ValueT Lookup(const KeyT& key) const = 0;
 
 		virtual ~IHashMap();
 	};
@@ -56,7 +56,7 @@ namespace CeleraOne
 	class HashMap : public IHashMap<KeyT, ValueT>
 	{
 	protected:
-		const float MAX_LOAD_FACTOR = 0.5;
+		const float MAX_LOAD_FACTOR = 0.50f;
 
 		size_t _hashMapSize;
 		size_t _currentSize;
@@ -151,13 +151,16 @@ namespace CeleraOne
 
 			_hashMapPtr.reset(new HashMapEntryT[_hashMapSize]);
 			_capacity = capacity;
+
+			std::cout << "capacity=" << _capacity << " max(load f)=" << MAX_LOAD_FACTOR << " mapsize=" << _hashMapSize << "\n";
 		}
 
 		virtual size_t FindIndex(const KeyT& key) const
 		{
-			auto idx = _hashFunc(key);
+			auto idx = _hashFunc(key) % _hashMapSize;
 			auto offset = 1;
 
+			std::cout << "key=" << key << ":";
 			for (; ; idx += offset , offset += 2)
 			{
 				if (idx >= _hashMapSize)
@@ -165,7 +168,9 @@ namespace CeleraOne
 				auto& entry = _hashMapPtr[idx];
 				if (entry.state() == HashMapEntryT::EMPTY || entry.key() == key)
 					break;
+				std::cout << " x(" << idx << ")";
 			}
+			std::cout << " +[" << idx << "]\r\n";
 
 			return idx;
 		}
@@ -183,8 +188,11 @@ namespace CeleraOne
 
 			auto idx = FindIndex(key);
 
-			_hashMapPtr[idx].Assign(key, value);
-			++_currentSize;
+			auto & entry = _hashMapPtr[idx];
+			if (entry.state() == HashMapEntryT::EMPTY)
+				++_currentSize;
+
+			entry.Assign(key, value);
 		}
 
 		void Delete(const KeyT& key) override
@@ -199,21 +207,12 @@ namespace CeleraOne
 			return _hashMapPtr[idx].state() == HashMapEntryT::ACTIVE;
 		}
 
-		const ValueT& Lookup(const KeyT& key) const override
+		ValueT Lookup(const KeyT& key) const override
 		{
 			auto idx = FindIndex(key);
 			if (_hashMapPtr[idx].state() != HashMapEntryT::ACTIVE)
 				throw NonExistingEntryException();
 			return _hashMapPtr[idx].value();
-		}
-
-		void Clear()
-		{
-			_currentSize = 0;
-			for (auto idx = 0u; idx < _hashMapSize; ++idx)
-			{
-				_hashMapPtr[idx].Empty();
-			}
 		}
 	};
 }

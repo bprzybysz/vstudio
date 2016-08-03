@@ -130,15 +130,93 @@ namespace ut{
 		}
 	}
 
-	TEST_F(HashMapUt, DoubleHashMapCreateTest)
+	TEST_F(HashMapUt, HashMapContainsTest)
+	{
+		UIntHashMapT map(7);
+
+		auto data = std::vector < unsigned int > {111101, 1234, 7777, 4321, 88888, 1010101010, 44444};
+
+		for(auto d : data)
+			map.Insert(d, d);
+
+		for (auto k : data)
+		{
+			if (!map.Contains(k))
+				FAIL() << "Map should contain element key=" << k;
+		}
+	}
+
+	TEST_F(HashMapUt, HashMapDeleteTest)
+	{
+		UIntHashMapT map(10);
+
+		map.Insert(1111, 1111);
+		if (!map.Contains(1111))
+			FAIL() << "Map should contain element key=1111";
+		map.Delete(1111);
+		if (map.Contains(1111))
+			FAIL() << "Map shouldn't contain element key=1111";
+		map.Insert(1111, 3333);
+		if (!map.Contains(1111))
+			FAIL() << "Map should contain element key=1111";
+	}
+
+	TEST_F(HashMapUt, HashMapDeleteInBetweenClusterTest)
+	{
+		UIntHashMapT map(100);
+
+		for (auto i = 100; i < 200; ++i)
+		{
+			map.Insert(i, i % 97);
+		}
+
+		UIntUtilHashMapT utMap(std::move(map));
+
+		//erase key 167:  x(190) x(191) +[194]
+		//test key 195 x(193) x(194) x(197) +[202]
+
+		if (utMap.HashIdx(167) != 194)
+			FAIL() << "Map should contain key 167 at [194]";
+		utMap.Delete(167);
+		if (utMap.Contains(167))
+			FAIL() << "Map shouldn't contain element key=167";
+		if (utMap.HashIdx(195) != 202)
+			FAIL() << "Map should contain key 195 at [202]";
+
+	}
+
+	TEST_F(HashMapUt, HashMapCurrentSizeTest)
+	{
+		UIntHashMapT map(100);
+		if(map.CurrentSize() != 0)
+			FAIL() << "Map should be empty";
+
+		map.Insert(101, 101);
+		if (map.CurrentSize() != 1)
+			FAIL() << "Map should contain 1 element!";
+
+		map.Delete(101);
+		if (map.CurrentSize() != 1)
+			FAIL() << "Map should still be 1 element in size!";
+
+		map.Insert(101, 101);
+		if (map.CurrentSize() != 1)
+			FAIL() << "Map should still be 1 element in size!";
+
+		map.Insert(202, 202);
+		if (map.CurrentSize() != 2)
+			FAIL() << "Map should contain 2!";
+	}
+
+	TEST_F(HashMapUt, DoubleHashMapInsert500CompareLookup)
 	{
 		HashGenerator hashGen;
 
-		auto probHash = hashGen.GetHash<UIntDoubleHashMapT::ProbHashFuncT, size_t>();
-
-		UIntDoubleHashMapT dmap(1000, probHash);
+		auto probHash = hashGen.GetUniversalHash<UIntDoubleHashMapT::ProbHashFuncT>();
 
 		const auto inCnt = 500;
+
+		UIntDoubleHashMapT dmap(inCnt, probHash);
 
 		std::vector<unsigned int> expected(inCnt);
 
@@ -156,13 +234,9 @@ namespace ut{
 			lookupValue[i] = dmap.Lookup(i);
 		}
 
-
-//		UIntUtilHashMapT map(std::move(dmap));
-//		auto preview = map.Preview();
-
-
 		EXPECT_EQ(lookupValue, expected);
 	}
+
 
 
 

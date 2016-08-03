@@ -5,6 +5,16 @@
 
 namespace CeleraOne
 {
+	class HashMapUtilException : std::exception
+	{
+	public:
+
+		explicit HashMapUtilException(const char* const& string)
+			: exception{string}
+		{
+		}
+	};
+
 	template <typename KeyT, typename ValueT>
 	class HashMapUtil : public HashMap<KeyT, ValueT>
 	{
@@ -55,6 +65,13 @@ namespace CeleraOne
 			return std::move(indexes);
 		}
 
+		size_t HashIdx(const KeyT & key)
+		{
+			auto idx = FindIndex(key);
+			if (_hashMapPtr[idx].state() != HashMapEntryT::ACTIVE)
+				throw new HashMapUtilException("There's no entry in map for this key");
+			return idx;
+		}
 	};
 
 };
